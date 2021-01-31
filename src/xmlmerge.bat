@@ -1,1 +1,1 @@
-C:\Python\Python38\python.exe xmlmerge.py
+C:\Python\Python38\python.exe xmlmerge.py C:\_exchange\20210128_PROD_R56.9\XML
