@@ -6,7 +6,7 @@
 import sys, os, re   #os + regexp
 import shutil   #copy/move files
 
-print('\nMerge multiple XML patch files into one, 31.01.2021, ZAS\n')
+print('\nSiebel Patch Utils: Merge multiple XML files into one, 31.01.2021, ZAS\n')
 
 #проверка на наличие аргумента - путь к папке с XML
 if len(sys.argv) < 2:
