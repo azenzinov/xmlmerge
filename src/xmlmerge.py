@@ -16,12 +16,14 @@ if len(sys.argv) < 2:
 #папка для отработанных файлов
 srcPath  = sys.argv[1] + '\\'
 dstPath  = srcPath + '_source\\'
+resFilePrefix  = ''             #результирующий файл - префикс
+resFilePostfix = '_merged.XML'  #результирующий файл - постфикс
 #список поддерживаемых типов
-nameList = ['IMAP','DMAP','DVM'] #имена типов
-typeList = ['^imap[0-9]*.xml$','^dmap[0-9]*.xml$','^dvm[0-9]*.xml$'] #типы
-patList  = ['(<EaiObjectMap[\s\S]+?<Name[> \t\n]+([^\>]+)<\/Name[\s\S]+?<\/EaiObjectMap[> \n]+)',
+nameList = ['DVM','DMAP','IMAP'] #имена типов
+typeList = ['^dvm[0-9]*.xml$','^dmap[0-9]*.xml$','^imap[0-9]*.xml$'] #типы
+patList  = ['(<FinsValidationRuleSet[\s\S]+?<Name[> \t\n]+([^\>]+)<\/Name[\s\S]+?<\/FinsValidationRuleSet[> \n]+)',
             '(<FinsDataMapObject[\s\S]+?<Name[> \t\n]+([^\>]+)<\/Name[\s\S]+?<\/FinsDataMapObject[> \n]+)',
-            '(<FinsValidationRuleSet[\s\S]+?<Name[> \t\n]+([^\>]+)<\/Name[\s\S]+?<\/FinsValidationRuleSet[> \n]+)']
+            '(<EaiObjectMap[\s\S]+?<Name[> \t\n]+([^\>]+)<\/Name[\s\S]+?<\/EaiObjectMap[> \n]+)']
 
 #возвращает массив с найденными названиями файлов, подходящими по маске
 def getMatchFileList(currType, fileList):
@@ -75,7 +77,7 @@ for currNameIdx, currName in enumerate(nameList):
 
     matchList = getMatchFileList(currType, fileList)
     #print(matchList)
-    print('===' + currName + ' (' + str(len(matchList)) + ') ===')
+    print('=== ' + currName + ' (' + str(len(matchList)) + ') ===')
 
     #если файл данного типа единственный, то переносим его в папку исходников
     #с откопированием в результирующую, иначе обрабатываем пачку и исходники переносим в исходную 
@@ -84,7 +86,7 @@ for currNameIdx, currName in enumerate(nameList):
         srcFullFile = srcPath + matchList[0]
         dstFullFile = dstPath + matchList[0]
         shutil.move(srcFullFile, dstFullFile)
-        shutil.copy2(dstFullFile, srcPath + '_' + currName + '.XML')
+        shutil.copy2(dstFullFile, srcPath + resFilePrefix + currName + resFilePostfix)
 
     elif len(matchList) > 1:
         #обратная сортировка: от последнего к первому
@@ -128,12 +130,12 @@ for currNameIdx, currName in enumerate(nameList):
         #print(content)
 
         #3. записываем на диск
-        f = open(srcPath + '_' + nameList[currNameIdx] + '.XML', 'wb')
+        f = open(srcPath + resFilePrefix + nameList[currNameIdx] + resFilePostfix, 'wb')
         f.write(content.encode('utf8'))
         f.close()
 
     #вывод информации о картах и файлах
-    print('--- Summary ---')
+    #print('--- Summary ---')
 
-    for resultIdx, resultItemName in enumerate(resultItems):
-        print(resultItemName + ' - ' + resultItemsFile[resultIdx])
+    #for resultIdx, resultItemName in enumerate(resultItems):
+    #    print(resultItemName + ' - ' + resultItemsFile[resultIdx])
